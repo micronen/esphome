@@ -16,15 +16,20 @@ class HeapSensor : public PollingComponent {
     }
 
 #ifdef ARDUINO_ARCH_ESP8266
+// CLANG_TIDY uses an old arduino framework which doesn't support the heap state functions
+#ifndef CLANG_TIDY
     if (this->fragmentation_sensor_ != nullptr) {
+      // NOTE: Requires arduino_version 2.5.2 or above
       int frag = ESP.getHeapFragmentation();
       this->fragmentation_sensor_->publish_state(frag);
     }
 
     if (this->block_sensor_ != nullptr) {
+      // NOTE: Requires arduino_version 2.5.2 or above
       int block = ESP.getMaxFreeBlockSize();
       this->block_sensor_->publish_state(block);
     }
+#endif
 #endif
   }
 
