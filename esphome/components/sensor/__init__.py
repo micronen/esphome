@@ -43,7 +43,10 @@ from esphome.const import (
     DEVICE_CLASS_PRESSURE,
     DEVICE_CLASS_TIMESTAMP,
     DEVICE_CLASS_VOLTAGE,
+    DEVICE_CLASS_MEMORY,
+    DEVICE_CLASS_ESPHOME,
 )
+
 from esphome.core import CORE, coroutine, coroutine_with_priority
 from esphome.util import Registry
 
@@ -62,6 +65,8 @@ DEVICE_CLASSES = [
     DEVICE_CLASS_PRESSURE,
     DEVICE_CLASS_TIMESTAMP,
     DEVICE_CLASS_VOLTAGE,
+    DEVICE_CLASS_MEMORY,
+    DEVICE_CLASS_ESPHOME,
 ]
 
 IS_PLATFORM_COMPONENT = True
