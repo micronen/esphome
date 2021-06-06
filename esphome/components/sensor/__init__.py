@@ -48,7 +48,6 @@ from esphome.const import (
     DEVICE_CLASS_TIMESTAMP,
     DEVICE_CLASS_VOLTAGE,
     DEVICE_CLASS_MEMORY,
-    DEVICE_CLASS_ESPHOME,
     STATE_CLASS_NONE,
 )
 
@@ -73,7 +72,6 @@ DEVICE_CLASSES = [
     DEVICE_CLASS_PRESSURE,
     DEVICE_CLASS_VOLTAGE,
     DEVICE_CLASS_MEMORY,
-    DEVICE_CLASS_ESPHOME,
 ]
 
 sensor_ns = cg.esphome_ns.namespace("sensor")
