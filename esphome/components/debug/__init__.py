@@ -51,9 +51,9 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.polling_component_schema("60s"))
 
 
-def to_code(config):
+async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
-    yield cg.register_component(var, config)
+    await cg.register_component(var, config)
 
     if CONF_DEVICE in config:
         sens = cg.new_Pvariable(config[CONF_DEVICE][CONF_ID])
