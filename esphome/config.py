@@ -296,6 +296,17 @@ def do_id_pass(result):  # type: (Config) -> None
                             path,
                         )
 
+def remove_conditioal_fields(config):
+    ## Recursivly remove keys with 'NOT IN USE' in them from the configuration
+    if isinstance(config, dict):
+        config = {k:v for (k,v) in config.items() if not "NOT IN USE" in k}
+        for (k,v) in config.items():
+            config[k] = remove_conditioal_fields(v)
+    elif isinstance(config, list):
+        for i, it in enumerate(config):
+            config[i] = remove_conditioal_fields(it)
+        config[:] = [x for x in config if x]
+    return config
 
 def recursive_check_replaceme(value):
     if isinstance(value, list):
@@ -347,6 +358,12 @@ def validate_config(config, command_line_substitutions):
         except vol.Invalid as err:
             result.add_error(err)
             return result
+
+    # 1.05. Remove conditional fields
+    try:
+        config = remove_conditioal_fields(config)
+    except vol.Invalid as err:
+        result.add_error(err)
 
     # 1.1. Check for REPLACEME special value
     try:
