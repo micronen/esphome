@@ -90,13 +90,14 @@ enum ClimateAction : uint32_t {
   CLIMATE_ACTION_FAN = 6,
 };
 enum ClimatePreset : uint32_t {
-  CLIMATE_PRESET_ECO = 0,
-  CLIMATE_PRESET_AWAY = 1,
-  CLIMATE_PRESET_BOOST = 2,
-  CLIMATE_PRESET_COMFORT = 3,
-  CLIMATE_PRESET_HOME = 4,
-  CLIMATE_PRESET_SLEEP = 5,
-  CLIMATE_PRESET_ACTIVITY = 6,
+  CLIMATE_PRESET_NONE = 0,
+  CLIMATE_PRESET_HOME = 1,
+  CLIMATE_PRESET_AWAY = 2,
+  CLIMATE_PRESET_BOOST = 3,
+  CLIMATE_PRESET_COMFORT = 4,
+  CLIMATE_PRESET_ECO = 5,
+  CLIMATE_PRESET_SLEEP = 6,
+  CLIMATE_PRESET_ACTIVITY = 7,
 };
 
 }  // namespace enums
@@ -184,6 +185,8 @@ class DeviceInfoResponse : public ProtoMessage {
   std::string compilation_time{};
   std::string model{};
   bool has_deep_sleep{false};
+  std::string project_name{};
+  std::string project_version{};
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
@@ -697,23 +700,23 @@ class CameraImageRequest : public ProtoMessage {
 };
 class ListEntitiesClimateResponse : public ProtoMessage {
  public:
-  std::string object_id{};                                       // NOLINT
-  uint32_t key{0};                                               // NOLINT
-  std::string name{};                                            // NOLINT
-  std::string unique_id{};                                       // NOLINT
-  bool supports_current_temperature{false};                      // NOLINT
-  bool supports_two_point_target_temperature{false};             // NOLINT
-  std::vector<enums::ClimateMode> supported_modes{};             // NOLINT
-  float visual_min_temperature{0.0f};                            // NOLINT
-  float visual_max_temperature{0.0f};                            // NOLINT
-  float visual_temperature_step{0.0f};                           // NOLINT
-  bool supports_away{false};                                     // NOLINT
-  bool supports_action{false};                                   // NOLINT
-  std::vector<enums::ClimateFanMode> supported_fan_modes{};      // NOLINT
-  std::vector<enums::ClimateSwingMode> supported_swing_modes{};  // NOLINT
-  std::vector<std::string> supported_custom_fan_modes{};         // NOLINT
-  std::vector<enums::ClimatePreset> supported_presets{};         // NOLINT
-  std::vector<std::string> supported_custom_presets{};           // NOLINT
+  std::string object_id{};
+  uint32_t key{0};
+  std::string name{};
+  std::string unique_id{};
+  bool supports_current_temperature{false};
+  bool supports_two_point_target_temperature{false};
+  std::vector<enums::ClimateMode> supported_modes{};
+  float visual_min_temperature{0.0f};
+  float visual_max_temperature{0.0f};
+  float visual_temperature_step{0.0f};
+  bool legacy_supports_away{false};
+  bool supports_action{false};
+  std::vector<enums::ClimateFanMode> supported_fan_modes{};
+  std::vector<enums::ClimateSwingMode> supported_swing_modes{};
+  std::vector<std::string> supported_custom_fan_modes{};
+  std::vector<enums::ClimatePreset> supported_presets{};
+  std::vector<std::string> supported_custom_presets{};
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
@@ -724,19 +727,19 @@ class ListEntitiesClimateResponse : public ProtoMessage {
 };
 class ClimateStateResponse : public ProtoMessage {
  public:
-  uint32_t key{0};                       // NOLINT
-  enums::ClimateMode mode{};             // NOLINT
-  float current_temperature{0.0f};       // NOLINT
-  float target_temperature{0.0f};        // NOLINT
-  float target_temperature_low{0.0f};    // NOLINT
-  float target_temperature_high{0.0f};   // NOLINT
-  bool away{false};                      // NOLINT
-  enums::ClimateAction action{};         // NOLINT
-  enums::ClimateFanMode fan_mode{};      // NOLINT
-  enums::ClimateSwingMode swing_mode{};  // NOLINT
-  std::string custom_fan_mode{};         // NOLINT
-  enums::ClimatePreset preset{};         // NOLINT
-  std::string custom_preset{};           // NOLINT
+  uint32_t key{0};
+  enums::ClimateMode mode{};
+  float current_temperature{0.0f};
+  float target_temperature{0.0f};
+  float target_temperature_low{0.0f};
+  float target_temperature_high{0.0f};
+  bool legacy_away{false};
+  enums::ClimateAction action{};
+  enums::ClimateFanMode fan_mode{};
+  enums::ClimateSwingMode swing_mode{};
+  std::string custom_fan_mode{};
+  enums::ClimatePreset preset{};
+  std::string custom_preset{};
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
@@ -747,27 +750,27 @@ class ClimateStateResponse : public ProtoMessage {
 };
 class ClimateCommandRequest : public ProtoMessage {
  public:
-  uint32_t key{0};                          // NOLINT
-  bool has_mode{false};                     // NOLINT
-  enums::ClimateMode mode{};                // NOLINT
-  bool has_target_temperature{false};       // NOLINT
-  float target_temperature{0.0f};           // NOLINT
-  bool has_target_temperature_low{false};   // NOLINT
-  float target_temperature_low{0.0f};       // NOLINT
-  bool has_target_temperature_high{false};  // NOLINT
-  float target_temperature_high{0.0f};      // NOLINT
-  bool has_away{false};                     // NOLINT
-  bool away{false};                         // NOLINT
-  bool has_fan_mode{false};                 // NOLINT
-  enums::ClimateFanMode fan_mode{};         // NOLINT
-  bool has_swing_mode{false};               // NOLINT
-  enums::ClimateSwingMode swing_mode{};     // NOLINT
-  bool has_custom_fan_mode{false};          // NOLINT
-  std::string custom_fan_mode{};            // NOLINT
-  bool has_preset{false};                   // NOLINT
-  enums::ClimatePreset preset{};            // NOLINT
-  bool has_custom_preset{false};            // NOLINT
-  std::string custom_preset{};              // NOLINT
+  uint32_t key{0};
+  bool has_mode{false};
+  enums::ClimateMode mode{};
+  bool has_target_temperature{false};
+  float target_temperature{0.0f};
+  bool has_target_temperature_low{false};
+  float target_temperature_low{0.0f};
+  bool has_target_temperature_high{false};
+  float target_temperature_high{0.0f};
+  bool has_legacy_away{false};
+  bool legacy_away{false};
+  bool has_fan_mode{false};
+  enums::ClimateFanMode fan_mode{};
+  bool has_swing_mode{false};
+  enums::ClimateSwingMode swing_mode{};
+  bool has_custom_fan_mode{false};
+  std::string custom_fan_mode{};
+  bool has_preset{false};
+  enums::ClimatePreset preset{};
+  bool has_custom_preset{false};
+  std::string custom_preset{};
   void encode(ProtoWriteBuffer buffer) const override;
   void dump_to(std::string &out) const override;
 
