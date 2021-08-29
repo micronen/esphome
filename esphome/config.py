@@ -246,6 +246,19 @@ def iter_ids(config, path=None):
             yield from iter_ids(value, path + [key])
 
 
+def remove_conditioal_fields(config):
+    ## Recursivly remove keys with 'NOT IN USE' in them from the configuration
+    if isinstance(config, dict):
+        config = {k:v for (k,v) in config.items() if not "NOT IN USE" in k}
+        for (k,v) in config.items():
+            config[k] = remove_conditioal_fields(v)
+    elif isinstance(config, list):
+        for i, it in enumerate(config):
+            config[i] = remove_conditioal_fields(it)
+        config[:] = [x for x in config if x]
+    return config
+
+
 def recursive_check_replaceme(value):
     if isinstance(value, list):
         return cv.Schema([recursive_check_replaceme])(value)
