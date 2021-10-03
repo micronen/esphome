@@ -5,6 +5,7 @@ from esphome.const import (
     CONF_BSSID,
     CONF_IP_ADDRESS,
     CONF_SCAN_RESULTS,
+    CONF_VERBOSE,
     CONF_SSID,
     CONF_MAC_ADDRESS,
     ENTITY_CATEGORY_DIAGNOSTIC,
@@ -36,7 +37,9 @@ CONFIG_SCHEMA = cv.Schema(
         ).extend(cv.polling_component_schema("1s")),
         cv.Optional(CONF_SCAN_RESULTS): text_sensor.text_sensor_schema(
             ScanResultsWiFiInfo, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
-        ).extend(cv.polling_component_schema("60s")),
+        ).extend({
+            cv.polling_component_schema("60s"),
+            cv.Optional(CONF_VERBOSE, default=False): cv.boolean}),
         cv.Optional(CONF_SSID): text_sensor.text_sensor_schema(
             SSIDWiFiInfo, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
         ).extend(cv.polling_component_schema("1s")),
@@ -55,6 +58,7 @@ async def setup_conf(config, key):
         conf = config[key]
         var = await text_sensor.new_text_sensor(conf)
         await cg.register_component(var, conf)
+        return var
 
 
 async def to_code(config):
@@ -62,4 +66,6 @@ async def to_code(config):
     await setup_conf(config, CONF_SSID)
     await setup_conf(config, CONF_BSSID)
     await setup_conf(config, CONF_MAC_ADDRESS)
-    await setup_conf(config, CONF_SCAN_RESULTS)
+    var = await setup_conf(config, CONF_SCAN_RESULTS)
+    if var is not None:
+        cg.add(var.set_verbose(config[CONF_SCAN_RESULTS][CONF_VERBOSE]))

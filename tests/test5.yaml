@@ -487,3 +487,8 @@ display:
     lambda: |-
       it.print("81818181");
 
+text_sensor:
+  - platform: wifi_info
+    scan_results:
+      name: 'Scan Results'
+      verbose: True
