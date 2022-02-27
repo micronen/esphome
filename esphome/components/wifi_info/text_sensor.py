@@ -37,9 +37,9 @@ CONFIG_SCHEMA = cv.Schema(
         ).extend(cv.polling_component_schema("1s")),
         cv.Optional(CONF_SCAN_RESULTS): text_sensor.text_sensor_schema(
             ScanResultsWiFiInfo, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
-        ).extend({
-            cv.polling_component_schema("60s"),
-            cv.Optional(CONF_VERBOSE, default=False): cv.boolean}),
+        ).extend(
+            {cv.Optional(CONF_VERBOSE, default=False): cv.boolean}
+        ).extend(cv.polling_component_schema("60s")),
         cv.Optional(CONF_SSID): text_sensor.text_sensor_schema(
             SSIDWiFiInfo, entity_category=ENTITY_CATEGORY_DIAGNOSTIC
         ).extend(cv.polling_component_schema("1s")),
