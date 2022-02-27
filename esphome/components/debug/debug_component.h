@@ -11,6 +11,9 @@
 #ifdef USE_TEXT_SENSOR
 #include "esphome/components/text_sensor/text_sensor.h"
 #endif
+#ifdef USE_BINARY_SENSOR
+#include "esphome/components/binary_sensor/binary_sensor.h"
+#endif
 
 namespace esphome {
 namespace debug {
@@ -32,7 +35,20 @@ class DebugComponent : public PollingComponent {
   void set_fragmentation_sensor(sensor::Sensor *fragmentation_sensor) { fragmentation_sensor_ = fragmentation_sensor; }
 #endif
   void set_loop_time_sensor(sensor::Sensor *loop_time_sensor) { loop_time_sensor_ = loop_time_sensor; }
+  void set_loop_delay_sensor(sensor::Sensor *loop_delay_sensor) { loop_delay_sensor_ = loop_delay_sensor; }
 #endif  // USE_SENSOR
+
+#ifdef USE_BINARY_SENSOR
+  void set_loop_high_frequency(binary_sensor::BinarySensor *loop_high_frequency) {
+    loop_high_frequency_ = loop_high_frequency;
+  }
+#endif // USE_BINARY_SENSOR
+
+#if defined(USE_SENSOR) && defined(USE_TEXT_SENSOR)
+  void set_blocking_sensor(text_sensor::TextSensor *blocking_sensor) { blocking_sensor_ = blocking_sensor; }
+  void set_blocking_sensor_time(sensor::Sensor *blocking_sensor_time) { blocking_sensor_time_ = blocking_sensor_time; }
+#endif  // USE_SENSOR && USE_TEXT_SENSOR
+
  protected:
   uint32_t free_heap_{};
 
@@ -46,11 +62,21 @@ class DebugComponent : public PollingComponent {
   sensor::Sensor *fragmentation_sensor_{nullptr};
 #endif
   sensor::Sensor *loop_time_sensor_{nullptr};
+  sensor::Sensor *loop_delay_sensor_{nullptr};
 #endif  // USE_SENSOR
+
+#ifdef USE_BINARY_SENSOR
+  binary_sensor::BinarySensor *loop_high_frequency_{nullptr};
+#endif // USE_BINARY_SENSOR
 
 #ifdef USE_TEXT_SENSOR
   text_sensor::TextSensor *device_info_{nullptr};
 #endif  // USE_TEXT_SENSOR
+
+#if defined(USE_SENSOR) && defined(USE_TEXT_SENSOR)
+  sensor::Sensor *blocking_sensor_time_{nullptr};
+  text_sensor::TextSensor *blocking_sensor_{nullptr};
+#endif  // USE_SENSOR && USE_TEXT_SENSOR
 };
 
 }  // namespace debug

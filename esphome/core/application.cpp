@@ -83,6 +83,8 @@ void Application::loop() {
 
   if (HighFrequencyLoopRequester::is_high_frequency()) {
     yield();
+    this->last_loop_delay_ = 0;
+    this->high_frequency_requested_ = true;
   } else {
     uint32_t delay_time = this->loop_interval_;
     if (now - this->last_loop_ < this->loop_interval_)
@@ -94,6 +96,9 @@ void Application::loop() {
     next_schedule = std::max(next_schedule, delay_time / 2);
     delay_time = std::min(next_schedule, delay_time);
     delay(delay_time);
+
+    this->last_loop_delay_ = delay_time;
+    this->high_frequency_requested_ = false;
   }
   this->last_loop_ = now;
 

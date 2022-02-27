@@ -152,6 +152,9 @@ class Application {
    * @param loop_interval The interval in milliseconds to run the core loop at. Defaults to 16 milliseconds.
    */
   void set_loop_interval(uint32_t loop_interval) { this->loop_interval_ = loop_interval; }
+  uint32_t get_loop_interval() { return this->loop_interval_; }
+  uint32_t get_last_loop_delay() { return this->last_loop_delay_; }
+  bool get_high_frequency_requested() { return this->high_frequency_requested_; }
 
   void schedule_dump_config() { this->dump_config_at_ = 0; }
 
@@ -342,6 +345,8 @@ class Application {
   bool name_add_mac_suffix_;
   uint32_t last_loop_{0};
   uint32_t loop_interval_{16};
+  uint32_t last_loop_delay_{0};
+  bool high_frequency_requested_{false};
   size_t dump_config_at_{SIZE_MAX};
   uint32_t app_state_{0};
 };
