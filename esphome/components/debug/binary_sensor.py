@@ -10,7 +10,9 @@ CONFIG_SCHEMA = cv.All(
     cv.Schema(
         {
             cv.GenerateID(CONF_DEBUG_ID): cv.use_id(DebugComponent),
-            cv.Optional(CONF_LOOP_HIGH_FREQUENCY): binary_sensor.BINARY_SENSOR_SCHEMA.extend(
+            cv.Optional(
+                CONF_LOOP_HIGH_FREQUENCY
+            ): binary_sensor.BINARY_SENSOR_SCHEMA.extend(
                 {
                     cv.GenerateID(): cv.declare_id(binary_sensor.BinarySensor),
                 }

@@ -1,7 +1,11 @@
 from esphome.components import text_sensor
 import esphome.config_validation as cv
 import esphome.codegen as cg
-from esphome.const import CONF_DEVICE, CONF_BLOCKING_COMPONENT, ENTITY_CATEGORY_DIAGNOSTIC
+from esphome.const import (
+    CONF_DEVICE,
+    CONF_BLOCKING_COMPONENT,
+    ENTITY_CATEGORY_DIAGNOSTIC,
+)
 from . import CONF_DEBUG_ID, DebugComponent
 
 DEPENDENCIES = ["debug"]
