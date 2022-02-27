@@ -701,6 +701,12 @@ def validate_config(config, command_line_substitutions) -> Config:
 
     CORE.raw_config = config
 
+    # 1.05. Remove conditional fields
+    try:
+        config = remove_conditioal_fields(config)
+    except vol.Invalid as err:
+        result.add_error(err)
+
     # 1.1. Check for REPLACEME special value
     try:
         recursive_check_replaceme(config)
