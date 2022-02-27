@@ -198,8 +198,21 @@ WarnIfComponentBlockingGuard::~WarnIfComponentBlockingGuard() {
     const char *src = component_ == nullptr ? "<null>" : component_->get_component_source();
     ESP_LOGV(TAG, "Component %s took a long time for an operation (%.2f s).", src, (now - started_) / 1e3f);
     ESP_LOGV(TAG, "Components should block for at most 20-30ms.");
-    ;
+    WarnIfComponentBlockingGuard::last_blocking_src_ = src;
+    WarnIfComponentBlockingGuard::last_blocking_time_ = now - started_;
   }
 }
+
+void WarnIfComponentBlockingGuard::get_last_blocking(uint32_t &time, std::string &src) {
+  src = std::move(WarnIfComponentBlockingGuard::last_blocking_src_);
+  time = WarnIfComponentBlockingGuard::last_blocking_time_;
+  WarnIfComponentBlockingGuard::last_blocking_src_.clear();
+  WarnIfComponentBlockingGuard::last_blocking_time_ = 0;
+}
+
+std::string
+    WarnIfComponentBlockingGuard::last_blocking_src_;  // NOLINT: linter bug https://bugs.llvm.org/show_bug.cgi?id=48040
+uint32_t WarnIfComponentBlockingGuard::last_blocking_time_ =
+    0;  // NOLINT: linter bug https://bugs.llvm.org/show_bug.cgi?id=48040
 
 }  // namespace esphome

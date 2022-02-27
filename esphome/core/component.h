@@ -301,9 +301,16 @@ class WarnIfComponentBlockingGuard {
   WarnIfComponentBlockingGuard(Component *component);
   ~WarnIfComponentBlockingGuard();
 
+  // Return last blocking info members, and reset them
+  static void get_last_blocking(uint32_t &time, std::string &src);
+
  protected:
   uint32_t started_;
   Component *component_;
+
+  // Blocking component src & run time, reported to HA via debug_component
+  static std::string last_blocking_src_;  // NOLINT: linter bug https://bugs.llvm.org/show_bug.cgi?id=48040
+  static uint32_t last_blocking_time_;    // NOLINT: linter bug https://bugs.llvm.org/show_bug.cgi?id=48040
 };
 
 }  // namespace esphome

@@ -5,6 +5,7 @@
 #include "esphome/core/hal.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/version.h"
+#include "esphome/core/application.h"
 
 #ifdef USE_ESP32
 
@@ -327,7 +328,33 @@ void DebugComponent::update() {
     this->loop_time_sensor_->publish_state(this->max_loop_time_);
     this->max_loop_time_ = 0;
   }
+
+  if (this->loop_delay_sensor_ != nullptr) {
+    this->loop_delay_sensor_->publish_state(App.get_last_loop_delay());
+  }
+
+  if (this->loop_high_frequency_ != nullptr) {
+    this->loop_high_frequency_->publish_state(App.get_high_frequency_requested());
+  }
 #endif  // USE_SENSOR
+
+#ifdef USE_BINARY_SENSOR
+  if (this->loop_high_frequency_ != nullptr) {
+    this->loop_high_frequency_->publish_state(App.get_high_frequency_requested());
+  }
+#endif // USE_BINARY_SENSOR
+
+#if defined(USE_SENSOR) && defined(USE_TEXT_SENSOR)
+  if (this->blocking_sensor_ != nullptr && this->blocking_sensor_time_ != nullptr) {
+    uint32_t time;
+    std::string src;
+    WarnIfComponentBlockingGuard::get_last_blocking(time, src);
+    if (time > 0) {
+      this->blocking_sensor_->publish_state(src);
+      this->blocking_sensor_time_->publish_state(time);
+    }
+  }
+#endif  // USE_SENSOR && USE_TEXT_SENSOR
 }
 
 float DebugComponent::get_setup_priority() const { return setup_priority::LATE; }

@@ -6,6 +6,8 @@ from esphome.const import (
     CONF_FRAGMENTATION,
     CONF_BLOCK,
     CONF_LOOP_TIME,
+    CONF_BLOCKING_COMPONENT_TIME,
+    CONF_LOOP_DELAY_TIME,
     ENTITY_CATEGORY_DIAGNOSTIC,
     UNIT_MILLISECOND,
     UNIT_PERCENT,
@@ -47,6 +49,18 @@ CONFIG_SCHEMA = {
         accuracy_decimals=0,
         entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
     ),
+    cv.Optional(CONF_LOOP_DELAY_TIME): sensor.sensor_schema(
+        unit_of_measurement=UNIT_MILLISECOND,
+        icon=ICON_TIMER,
+        accuracy_decimals=1,
+        entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+    ),
+    cv.Optional(CONF_BLOCKING_COMPONENT_TIME): sensor.sensor_schema(
+        unit_of_measurement=UNIT_MILLISECOND,
+        icon=ICON_TIMER,
+        accuracy_decimals=1,
+        entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
+    ),
 }
 
 
@@ -68,3 +82,11 @@ async def to_code(config):
     if CONF_LOOP_TIME in config:
         sens = await sensor.new_sensor(config[CONF_LOOP_TIME])
         cg.add(debug_component.set_loop_time_sensor(sens))
+
+    if CONF_LOOP_DELAY_TIME in config:
+        sens = await sensor.new_sensor(config[CONF_LOOP_DELAY_TIME])
+        cg.add(debug_component.set_loop_delay_sensor(sens))
+
+    if CONF_BLOCKING_COMPONENT_TIME in config:
+        sens = await sensor.new_sensor(config[CONF_BLOCKING_COMPONENT_TIME])
+        cg.add(debug_component.set_blocking_sensor_time(sens))
